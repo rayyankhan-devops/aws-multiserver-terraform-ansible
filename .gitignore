@@ -1,0 +1,88 @@
+# ==============================================================================
+# Terraform
+# ==============================================================================
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all variable files that may contain sensitive credentials
+*.tfvars
+*.tfvars.json
+
+# Override files (used for local overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Plan cache files
+*.tfplan
+
+# ==============================================================================
+# SSH & Security Keys (Protect keys & credentials)
+# ==============================================================================
+*.pem
+*.key
+*.pub
+id_rsa*
+id_ed25519*
+multiserver*
+
+# ==============================================================================
+# Ansible
+# ==============================================================================
+# Ansible retry files (created when a playbook fails)
+*.retry
+
+# Ansible log files
+ansible.log
+ansible-navigator.log
+
+# Ansible Vault password files
+*.vault_pass
+*.vault_password
+.vault_pass*
+.vault_password*
+
+# Ansible facts cache
+.ansible/
+.ansible-cache/
+
+# Ansible Galaxy downloaded roles and collections
+roles/
+collections/
+*.tar.gz
+
+# ==============================================================================
+# OS & Editor Files
+# ==============================================================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editors & IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
