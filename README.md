@@ -2,6 +2,8 @@
 
 Automated provisioning of a heterogeneous multi-node EC2 cluster on AWS using modular Terraform, ready for multi-OS configuration management and orchestration with Ansible.
 
+![AWS Multi-Server Infrastructure Architecture](assets/architecture-overview.jpg)
+
 ---
 
 ## 📌 Architecture Overview
@@ -25,6 +27,8 @@ All instances are automatically tagged with `Owner = "rayyan"` and `ManagedBy = 
 multiserver/
 ├── .gitignore                      # Excludes state, SSH keys, & live hosts.ini
 ├── README.md                       # Project documentation
+├── assets/
+│   └── architecture-overview.jpg   # Architecture & project banner graphic
 ├── ansible/
 │   ├── ansible.cfg                 # Auto-detected Ansible configuration
 │   ├── default.cfg                 # Default configuration backup/reference
