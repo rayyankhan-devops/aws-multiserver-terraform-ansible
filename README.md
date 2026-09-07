@@ -23,18 +23,24 @@ All instances are automatically tagged with `Owner = "rayyan"` and `ManagedBy = 
 
 ```text
 multiserver/
-├── .gitignore                      # Ignore rules for Terraform state, Ansible, & SSH keys
+├── .gitignore                      # Excludes state, SSH keys, & live hosts.ini
 ├── README.md                       # Project documentation
+├── ansible/
+│   ├── ansible.cfg                 # Auto-detected Ansible configuration
+│   ├── default.cfg                 # Default configuration backup/reference
+│   └── inventories/
+│       ├── hosts.ini               # Dynamic inventory (generated on apply, git-ignored)
+│       └── hosts.example.ini       # Committed example inventory template
 └── terraform/
-    ├── terraform.tf                # Terraform & AWS provider requirements (v6.54.0)
+    ├── terraform.tf                # AWS & local provider definitions
     ├── main.tf                     # Root entry point calling EC2 module
     ├── output.tf                   # Outputs formatted IPs, users, & SSH commands
-    ├── dynamic.tf                  # Dynamic configurations
-    ├── multiserver                 # Private SSH key (ignored by git)
-    ├── multiserver.pub             # Public SSH key (ignored by git)
+    ├── dynamic.tf                  # Generates ansible/inventories/hosts.ini
+    ├── multiserver                 # Private SSH key (git-ignored)
+    ├── multiserver.pub             # Public SSH key (git-ignored)
     └── modules/
         └── ec2/
-            ├── main.tf             # AWS Key Pair & EC2 instance resources (for_each)
+            ├── main.tf             # AWS Key Pair & EC2 instances (for_each)
             ├── var.tf              # Module variables & default instance definitions
             └── output.tf           # Module-level output mappings
 ```
@@ -57,23 +63,28 @@ chmod 600 multiserver
 ```
 *(Both `multiserver` and `multiserver.pub` are safeguarded in `.gitignore` to prevent credential leakage).*
 
-### 3. Provision with Terraform
+### 3. Provision Infrastructure with Terraform
 Navigate to the `terraform/` directory:
 ```bash
 cd terraform
 
-# Initialize Terraform and download providers
+# Initialize Terraform (downloads AWS and Local providers)
 terraform init
 
-# Validate syntax and view planned infrastructure
+# Validate syntax and review planned infrastructure
 terraform plan
 
 # Apply changes to provision resources on AWS
 terraform apply
 ```
 
-### 4. Connect to Instances
-Terraform automatically outputs connection strings for every node:
+Upon successful execution, Terraform will:
+1. Register `multiserver.pub` with AWS EC2 in `us-east-1`.
+2. Provision all 4 EC2 instances with tags and public IPs.
+3. Automatically execute `dynamic.tf` to generate the Ansible inventory in `ansible/inventories/hosts.ini`.
+4. Output connection details and formatted SSH commands for each node.
+
+### 4. Connect to Instances Directly
 ```bash
 # Example SSH commands:
 ssh -i multiserver ubuntu@<ubuntu-master-ip>
@@ -84,37 +95,34 @@ ssh -i multiserver admin@<debian-worker-ip>
 
 ---
 
-## 🛠️ Ansible Integration (Next Steps)
+## 🛠️ Ansible Configuration & Orchestration
 
-This cluster is primed for multi-distribution Ansible playbooks.
+### Dynamic Inventory & Configuration
+- **Automatic Generation**: Running `terraform apply` populates `ansible/inventories/hosts.ini` with the live public IPs.
+- **Privacy Protection**: `hosts.ini` is strictly git-ignored. A template reference is provided in `ansible/inventories/hosts.example.ini`.
+- **Pre-configured Defaults**: `ansible/ansible.cfg` and `ansible/default.cfg` already point to `./inventories/hosts.ini`, specify the private SSH key, and enable `sudo` escalation.
 
-### Inventory Setup (`ansible/inventory.ini`)
-Generate an inventory using the Terraform outputs:
-```ini
-[master]
-ubuntu-master ansible_host=<UBUNTU_IP> ansible_user=ubuntu
-
-[workers]
-amazon-worker ansible_host=<AMAZON_IP> ansible_user=ec2-user
-redhat-worker ansible_host=<REDHAT_IP> ansible_user=ec2-user
-debian-worker ansible_host=<DEBIAN_IP> ansible_user=admin
-
-[all:vars]
-ansible_ssh_private_key_file=../terraform/multiserver
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-```
-
-### Ping All Nodes
+### Test Connectivity
+From the `ansible/` directory, run:
 ```bash
-ansible all -i inventory.ini -m ping
+cd ansible
+
+# Ping all nodes across all distributions
+ansible all -m ping
+
+# Target only the master node
+ansible master -m ping
+
+# Target only worker nodes
+ansible workers -m ping
 ```
 
 ---
 
 ## 🔒 Security Best Practices
-- **Private & Public Keys**: Excluded from version control via `.gitignore`.
-- **State Files**: `.tfstate` and `.tfstate.backup` are strictly git-ignored.
-- **Access Control**: Security groups and subnets can be parameterized in `terraform/modules/ec2/var.tf`.
+- **Keys Protected**: Private (`multiserver`) and public (`multiserver.pub`) SSH keys are git-ignored.
+- **Inventory Privacy**: Live `hosts.ini` with public IP addresses is excluded from version control.
+- **State Protection**: `.tfstate` and `.tfstate.backup` files are excluded by `.gitignore`.
 
 ---
 

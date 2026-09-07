@@ -60,6 +60,14 @@ ansible-navigator.log
 .ansible/
 .ansible-cache/
 
+# Ansible inventories with live IPs (keep example templates)
+**/inventories/hosts.ini
+**/inventories/host.ini
+hosts.ini
+host.ini
+!hosts.example.ini
+!host.example.ini
+
 # Ansible Galaxy downloaded roles and collections
 roles/
 collections/
