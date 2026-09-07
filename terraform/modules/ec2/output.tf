@@ -1,3 +1,4 @@
+# outputs all instance info including dynamic ssh commands
 output "instances" {
   description = "Public IP and SSH username for each created instance"
   value = {

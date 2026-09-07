@@ -1,3 +1,4 @@
+# expose instance details for ssh and ansible access
 output "instances" {
   description = "Public IP, SSH username, and connection details for each EC2 instance"
   value = {

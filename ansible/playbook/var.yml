@@ -1,0 +1,7 @@
+---
+common_tools:
+  - git
+  - wget
+  - tree
+  - unzip
+  - tar

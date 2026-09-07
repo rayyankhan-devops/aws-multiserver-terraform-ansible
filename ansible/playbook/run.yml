@@ -1,0 +1,34 @@
+---
+
+- name: Setup and configure worker nodes
+  hosts: workers
+  become: true
+
+  vars_files:
+    - var.yml
+
+  tasks:
+    - name: Update package cache (Debian family only)
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Install basic tools using a loop
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ common_tools }}"
+
+    - name: Verify installed tools
+      ansible.builtin.command: "which {{ item }}"
+      loop: "{{ common_tools }}"
+      register: tool_check
+      changed_when: false
+
+    - name: Display verification summary
+      ansible.builtin.debug:
+        msg: "✓ {{ item.item }} is available at {{ item.stdout }} on {{ inventory_hostname }}"
+      loop: "{{ tool_check.results }}"
+      loop_control:
+        label: "{{ item.item }}"

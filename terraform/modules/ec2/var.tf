@@ -1,54 +1,43 @@
+# ec2 instance size
 variable "instance_type" {
-
   description = "EC2 instance type"
   type        = string
-
-  default = "t3.micro"
+  default     = "t3.micro"
 }
 
-
+# aws key pair name
 variable "key_name" {
-
   description = "Key pair name for SSH access"
   type        = string
-
-  default = "multiserver"
+  default     = "multiserver"
 }
 
-
+# path to the local public key file
 variable "public_key_path" {
-
   description = "Path to the public key file for SSH access"
   type        = string
-
-  default = "multiserver.pub"
+  default     = "multiserver.pub"
 }
 
-
+# target subnet id
 variable "subnet_id" {
-
   description = "Subnet ID where the EC2 instances will be launched"
   type        = string
-
-  default = "subnet-09c13d67d99648b73"
+  default     = "subnet-09c13d67d99648b73"
 }
 
-
+# security groups for instances
 variable "security_group_ids" {
-
   description = "Security group IDs for the EC2 instances"
   type        = list(string)
-
   default = [
     "sg-072f1491b72423d85"
   ]
 }
 
-
+# cluster nodes configuration
 variable "instances" {
-
   description = "EC2 instances to create"
-
   type = map(object({
     name   = string
     role   = string
@@ -57,7 +46,6 @@ variable "instances" {
   }))
 
   default = {
-
     rayyan-amazon-worker = {
       name   = "rayyan-amazon-worker"
       role   = "worker"

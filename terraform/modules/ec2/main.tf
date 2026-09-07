@@ -1,8 +1,10 @@
+# upload local public key to aws
 resource "aws_key_pair" "multiserver" {
   key_name   = var.key_name
   public_key = file("${path.root}/${var.public_key_path}")
 }
 
+# default ssh users for each linux distro
 locals {
   ssh_users = {
     "Amazon Linux" = "ec2-user"
@@ -12,8 +14,8 @@ locals {
   }
 }
 
+# create ec2 instances from the defined map
 resource "aws_instance" "ec2-nodes" {
-
   for_each = var.instances
 
   ami                         = each.value.ami_id

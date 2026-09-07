@@ -1,3 +1,4 @@
+# provider and terraform version requirements
 terraform {
   required_version = ">= 1.5.0"
 
@@ -13,6 +14,7 @@ terraform {
   }
 }
 
+# configure aws provider region
 provider "aws" {
   region = "us-east-1"
 }

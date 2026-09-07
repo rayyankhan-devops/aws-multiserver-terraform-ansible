@@ -28,9 +28,12 @@ multiserver/
 ├── ansible/
 │   ├── ansible.cfg                 # Auto-detected Ansible configuration
 │   ├── default.cfg                 # Default configuration backup/reference
-│   └── inventories/
-│       ├── hosts.ini               # Dynamic inventory (generated on apply, git-ignored)
-│       └── hosts.example.ini       # Committed example inventory template
+│   ├── inventories/
+│   │   ├── hosts.ini               # Dynamic inventory (generated on apply, git-ignored)
+│   │   └── hosts.example.ini       # Committed example inventory template
+│   └── playbook/
+│       ├── run.yml                 # Playbook installing common tools on workers
+│       └── var.yml                 # Variables file defining loop items (tools)
 └── terraform/
     ├── terraform.tf                # AWS & local provider definitions
     ├── main.tf                     # Root entry point calling EC2 module
@@ -115,6 +118,12 @@ ansible master -m ping
 
 # Target only worker nodes
 ansible workers -m ping
+```
+
+### Run Configuration Playbook
+Install essential tools (`git`, `curl`, `wget`, `tree`, `unzip`) across all worker nodes using loops:
+```bash
+ansible-playbook playbook/run.yml
 ```
 
 ---
