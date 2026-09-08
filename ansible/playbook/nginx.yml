@@ -1,0 +1,5 @@
+- name: install and run nginx
+  hosts: workers
+  become: true
+  roles:  
+    - nginx

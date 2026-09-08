@@ -55,6 +55,8 @@ ansible-navigator.log
 *.vault_password
 .vault_pass*
 .vault_password*
+pass.txt
+*.pass
 
 # Ansible facts cache
 .ansible/
@@ -68,8 +70,8 @@ host.ini
 !hosts.example.ini
 !host.example.ini
 
-# Ansible Galaxy downloaded roles and collections
-roles/
+# Ansible Galaxy downloaded roles and collections (preserve project roles)
+/roles/
 collections/
 *.tar.gz
 

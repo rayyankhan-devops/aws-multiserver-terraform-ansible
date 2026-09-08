@@ -20,7 +20,7 @@ ${inst.name} ansible_host=${inst.public_ip} ansible_user=${inst.username}
 %{ endfor ~}
 
 [all:vars]
-ansible_ssh_private_key_file=../terraform/multiserver
+ansible_ssh_private_key_file={{ inventory_dir }}/../../terraform/multiserver
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOT
 }
